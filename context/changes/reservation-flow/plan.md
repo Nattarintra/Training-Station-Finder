@@ -270,11 +270,11 @@ No persisted data migration is required because reservations and idempotency rec
 
 #### Automated
 
-- [x] 3.1 Expo SDK 54 dependency check passes
-- [x] 3.2 Web export completes without route errors
-- [x] 3.3 Final typecheck, lint, tests, and formatting checks pass
+- [x] 3.1 Expo SDK 54 dependency check passes — ddb1fff
+- [x] 3.2 Web export completes without route errors — ddb1fff
+- [x] 3.3 Final typecheck, lint, tests, and formatting checks pass — ddb1fff
 
 #### Manual
 
-- [x] 3.4 End-to-end reservation, recovery, confirmation, QR, and check-in smoke flow passes on target previews
-- [x] 3.5 Prototype scope remains limited to in-memory bookings and rendered QR confirmation
+- [x] 3.4 End-to-end reservation, recovery, confirmation, QR, and check-in smoke flow passes on target previews — ddb1fff
+- [x] 3.5 Prototype scope remains limited to in-memory bookings and rendered QR confirmation — ddb1fff
