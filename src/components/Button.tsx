@@ -8,7 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   selected?: boolean;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'neutral' | 'danger';
   style?: ViewStyle;
   accessibilityLabel?: string;
   accessibilityHint?: string | undefined;
@@ -39,7 +39,13 @@ export function Button({
       testID={testID}
       style={({ pressed }) => [
         styles.base,
-        variant === 'primary' ? styles.primary : styles.secondary,
+        variant === 'primary'
+          ? styles.primary
+          : variant === 'secondary'
+            ? styles.secondary
+            : variant === 'neutral'
+              ? styles.neutral
+              : styles.danger,
         pressed && !unavailable && styles.pressed,
         unavailable && styles.disabled,
         style,
@@ -47,10 +53,26 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? colors.surface : colors.primary}
+          color={
+            variant === 'primary'
+              ? colors.surface
+              : variant === 'danger'
+                ? colors.danger
+                : colors.text
+          }
         />
       ) : (
-        <Text style={variant === 'primary' ? styles.primaryText : styles.secondaryText}>
+        <Text
+          style={
+            variant === 'primary'
+              ? styles.primaryText
+              : variant === 'secondary'
+                ? styles.secondaryText
+                : variant === 'neutral'
+                  ? styles.neutralText
+                  : styles.dangerText
+          }
+        >
           {label}
         </Text>
       )}
@@ -70,6 +92,8 @@ const styles = StyleSheet.create({
   },
   primary: { backgroundColor: colors.primary, borderColor: colors.primary },
   secondary: { backgroundColor: colors.surface, borderColor: colors.primary },
+  neutral: { backgroundColor: colors.surface, borderColor: colors.border },
+  danger: { backgroundColor: colors.dangerSoft, borderColor: colors.danger },
   primaryText: { color: colors.surface, fontSize: 16, lineHeight: 20, fontWeight: '700' },
   secondaryText: {
     color: colors.primary,
@@ -77,6 +101,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: '700',
   },
+  neutralText: { color: colors.text, fontSize: 16, lineHeight: 20, fontWeight: '700' },
+  dangerText: { color: colors.danger, fontSize: 16, lineHeight: 20, fontWeight: '700' },
   pressed: { opacity: 0.82 },
   disabled: { opacity: 0.5 },
 });

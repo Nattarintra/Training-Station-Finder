@@ -10,6 +10,7 @@ interface StateViewProps {
   actionLabel?: string;
   onAction?: () => void;
   actionLoading?: boolean;
+  actionVariant?: 'primary' | 'secondary' | 'neutral' | 'danger';
 }
 
 export function StateView({
@@ -19,6 +20,7 @@ export function StateView({
   actionLabel,
   onAction,
   actionLoading = false,
+  actionVariant = 'primary',
 }: StateViewProps) {
   return (
     <View style={styles.container} accessibilityLiveRegion="polite">
@@ -30,6 +32,7 @@ export function StateView({
       {actionLabel && onAction && (
         <Button
           label={actionLabel}
+          variant={actionVariant}
           loading={actionLoading}
           onPress={onAction}
           style={styles.button}

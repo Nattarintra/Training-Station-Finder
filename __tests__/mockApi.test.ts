@@ -42,6 +42,7 @@ describe('mock API booking lifecycle', () => {
       fullName: 'Alex Morgan',
       email: 'alex@example.com',
       phone: '+46701234567',
+      idempotencyKey: 'lifecycle-1',
     });
     expect(reservation.bookingCode).toMatch(/^TSF-[A-Z0-9]{6}$/);
     const checkedIn = await checkIn(reservation.bookingCode.toLowerCase());
@@ -61,13 +62,19 @@ describe('mock API booking lifecycle', () => {
       phone: '+46701234567',
     };
 
-    await Promise.all(Array.from({ length: 6 }, () => createReservation(input)));
+    await Promise.all(
+      Array.from({ length: 6 }, (_, index) =>
+        createReservation({ ...input, idempotencyKey: `capacity-${index}` }),
+      ),
+    );
     const station = await getStation('harbor');
     expect(station.slots.find((slot) => slot.id === 'harbor-1')).toMatchObject({
       availability: 'unavailable',
       placesLeft: 0,
     });
-    await expect(createReservation(input)).rejects.toMatchObject({
+    await expect(
+      createReservation({ ...input, idempotencyKey: 'capacity-overflow' }),
+    ).rejects.toMatchObject({
       code: 'SLOT_UNAVAILABLE',
     });
   });
@@ -80,6 +87,7 @@ describe('mock API booking lifecycle', () => {
         fullName: 'Alex Morgan',
         email: 'alex@example.com',
         phone: '+46701234567',
+        idempotencyKey: 'race-1',
       }),
     ).rejects.toMatchObject({ code: 'SLOT_UNAVAILABLE' });
     const station = await getStation('harbor');
@@ -91,5 +99,40 @@ describe('mock API booking lifecycle', () => {
 
   it('rejects an invalid check-in code', async () => {
     await expect(checkIn('TSF-NOPE00')).rejects.toMatchObject({ code: 'INVALID_CODE' });
+  });
+
+  it('returns the original reservation for a repeated idempotency key', async () => {
+    const input = {
+      stationId: 'harbor',
+      slotId: 'harbor-1',
+      fullName: 'Alex Morgan',
+      email: 'alex@example.com',
+      phone: '+46701234567',
+      idempotencyKey: 'duplicate-1',
+    };
+
+    const first = await createReservation(input);
+    const duplicate = await createReservation(input);
+
+    expect(duplicate).toEqual(first);
+    expect(
+      (await getStation('harbor')).slots.find((slot) => slot.id === 'harbor-1'),
+    ).toMatchObject({ placesLeft: 5 });
+  });
+
+  it('rejects reusing a key with different reservation input', async () => {
+    const input = {
+      stationId: 'harbor',
+      slotId: 'harbor-1',
+      fullName: 'Alex Morgan',
+      email: 'alex@example.com',
+      phone: '+46701234567',
+      idempotencyKey: 'mismatch-1',
+    };
+
+    await createReservation(input);
+    await expect(
+      createReservation({ ...input, fullName: 'Jordan Lee' }),
+    ).rejects.toMatchObject({ code: 'INVALID_REQUEST' });
   });
 });

@@ -74,6 +74,7 @@ export default function HomeScreen() {
           message="We couldn’t load nearby stations. Check your connection and try again."
           actionLabel={isRetrying ? 'Trying again…' : 'Try again'}
           actionLoading={isRetrying}
+          actionVariant="danger"
           onAction={() => void retry()}
         />
       ) : stationData.length === 0 ? (

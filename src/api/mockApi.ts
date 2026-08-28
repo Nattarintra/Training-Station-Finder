@@ -1,11 +1,15 @@
 import { stations } from '@/src/api/fixtures';
-import { Reservation, ReservationInput, Station } from '@/src/types/domain';
+import { CreateReservationInput, Reservation, Station } from '@/src/types/domain';
 
 export class ApiError extends Error {
   constructor(
     message: string,
     public readonly code:
-      'NOT_FOUND' | 'SLOT_UNAVAILABLE' | 'INVALID_CODE' | 'STATIONS_UNAVAILABLE',
+      | 'NOT_FOUND'
+      | 'SLOT_UNAVAILABLE'
+      | 'INVALID_CODE'
+      | 'STATIONS_UNAVAILABLE'
+      | 'INVALID_REQUEST',
   ) {
     super(message);
     this.name = 'ApiError';
@@ -13,6 +17,10 @@ export class ApiError extends Error {
 }
 
 const reservations = new Map<string, Reservation>();
+const idempotentReservations = new Map<
+  string,
+  { fingerprint: string; reservation: Reservation }
+>();
 const forcedUnavailableSlots = new Set<string>();
 const reservedPlaces = new Map<string, number>();
 export type StationListScenario = 'success' | 'empty' | 'error';
@@ -62,8 +70,27 @@ export async function getStation(id: string): Promise<Station> {
   return snapshotStation(station);
 }
 
-export async function createReservation(input: ReservationInput): Promise<Reservation> {
+export async function createReservation(
+  input: CreateReservationInput,
+): Promise<Reservation> {
   await wait(550);
+  const fingerprint = JSON.stringify({
+    stationId: input.stationId,
+    slotId: input.slotId,
+    fullName: input.fullName,
+    email: input.email,
+    phone: input.phone,
+  });
+  const previous = idempotentReservations.get(input.idempotencyKey);
+  if (previous) {
+    if (previous.fingerprint !== fingerprint) {
+      throw new ApiError(
+        'This reservation request key has already been used.',
+        'INVALID_REQUEST',
+      );
+    }
+    return previous.reservation;
+  }
   const station = stations.find((item) => item.id === input.stationId);
   const slot = station
     ? snapshotStation(station).slots.find((item) => item.id === input.slotId)
@@ -83,7 +110,7 @@ export async function createReservation(input: ReservationInput): Promise<Reserv
   const key = slotKey(input.stationId, input.slotId);
   reservedPlaces.set(key, (reservedPlaces.get(key) ?? 0) + 1);
 
-  const id = `reservation-${Date.now()}`;
+  const id = `reservation-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const bookingCode = `TSF-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const reservation: Reservation = {
     ...input,
@@ -93,6 +120,7 @@ export async function createReservation(input: ReservationInput): Promise<Reserv
     checkedInAt: null,
   };
   reservations.set(id, reservation);
+  idempotentReservations.set(input.idempotencyKey, { fingerprint, reservation });
   return reservation;
 }
 
@@ -125,6 +153,7 @@ export async function checkIn(bookingCode: string): Promise<Reservation> {
 
 export function resetMockApi() {
   reservations.clear();
+  idempotentReservations.clear();
   forcedUnavailableSlots.clear();
   reservedPlaces.clear();
   stationListScenario = 'success';
