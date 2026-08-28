@@ -227,15 +227,15 @@ No data migration or compatibility layer is required. The existing `TimeSlot` mo
 
 #### Automated
 
-- [x] 1.1 Detail tests prove selectable slots can be selected and selection styling/semantics update
-- [x] 1.2 Detail tests prove full slots remain disabled and cannot become selected
-- [x] 1.3 Tests prove Continue is disabled without selection and navigates with correct params after selection
-- [x] 1.4 TypeScript and lint pass for the updated route
+- [x] 1.1 Detail tests prove selectable slots can be selected and selection styling/semantics update — a1b2833
+- [x] 1.2 Detail tests prove full slots remain disabled and cannot become selected — a1b2833
+- [x] 1.3 Tests prove Continue is disabled without selection and navigates with correct params after selection — a1b2833
+- [x] 1.4 TypeScript and lint pass for the updated route — a1b2833
 
 #### Manual
 
-- [x] 1.5 Compact viewport layout remains readable and actionable
-- [x] 1.6 Screen-reader slot and Continue semantics are understandable
+- [x] 1.5 Compact viewport layout remains readable and actionable — a1b2833
+- [x] 1.6 Screen-reader slot and Continue semantics are understandable — a1b2833
 
 ### Phase 2: Reservation Return Freshness
 
