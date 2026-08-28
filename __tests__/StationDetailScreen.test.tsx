@@ -6,6 +6,11 @@ import { useStation } from '@/src/features/stations/queries';
 
 const mockPush = jest.fn();
 const mockBack = jest.fn();
+const mockFocusEffect = jest.fn();
+
+jest.mock('@react-navigation/native', () => ({
+  useFocusEffect: (callback: () => void) => mockFocusEffect(callback),
+}));
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'harbor' }),
@@ -91,5 +96,23 @@ describe('StationDetailScreen selection', () => {
     expect(fullSlot.props.accessibilityHint).toBe('This time cannot be selected');
     fireEvent.press(fullSlot);
     expect(getByTestId('continue-reservation')).toBeDisabled();
+  });
+
+  it('uses warning copy for fewer than four remaining places', () => {
+    const { getByText } = render(<StationDetailScreen />);
+    expect(getByText('1 place left')).toBeOnTheScreen();
+    expect(getByText('2 places left')).toBeOnTheScreen();
+    expect(getByText('6 places available')).toBeOnTheScreen();
+  });
+
+  it('refetches details when the route regains focus', () => {
+    const refetch = jest.fn();
+    mockUseStation.mockReturnValue(queryResult({ refetch }));
+    render(<StationDetailScreen />);
+
+    const focusEffect = mockFocusEffect.mock.calls[0]?.[0] as () => void;
+    focusEffect();
+    focusEffect();
+    expect(refetch).toHaveBeenCalledTimes(1);
   });
 });

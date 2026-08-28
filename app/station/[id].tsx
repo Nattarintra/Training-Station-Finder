@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/src/components/Button';
@@ -21,11 +22,13 @@ function SlotRow({
   onSelect: (slotId: string) => void;
 }) {
   const unavailable = slot.availability === 'unavailable';
+  const lowAvailability =
+    !unavailable && (slot.availability === 'limited' || slot.placesLeft < 4);
   const date = formatSlotDate(slot.startsAt);
   const time = formatSlotTime(slot.startsAt, slot.endsAt);
   const availability = unavailable
     ? 'fully booked'
-    : slot.availability === 'limited'
+    : slot.availability === 'limited' || lowAvailability
       ? `${slot.placesLeft} ${slot.placesLeft === 1 ? 'place' : 'places'} left`
       : `${slot.placesLeft} ${slot.placesLeft === 1 ? 'place' : 'places'} available`;
   const actionLabel = unavailable ? 'Full' : selected ? 'Selected' : 'Select';
@@ -44,7 +47,13 @@ function SlotRow({
       <View style={styles.slotCopy}>
         <Text style={styles.slotDate}>{date}</Text>
         <Text style={styles.slotTime}>{time}</Text>
-        <Text style={[styles.places, slot.availability === 'limited' && styles.limited]}>
+        <Text
+          style={[
+            styles.places,
+            lowAvailability && styles.limited,
+            unavailable && styles.fullPlaces,
+          ]}
+        >
           {unavailable ? 'Fully booked' : availability}
         </Text>
       </View>
@@ -72,7 +81,27 @@ export default function StationDetailScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const stationQuery = useStation(params.id);
+  const { refetch } = stationQuery;
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+  const hasFocused = useRef(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (hasFocused.current) void refetch();
+      hasFocused.current = true;
+    }, [refetch]),
+  );
+
+  useEffect(() => {
+    if (
+      selectedSlotId &&
+      stationQuery.data?.slots.some(
+        (slot) => slot.id === selectedSlotId && slot.availability !== 'unavailable',
+      ) !== true
+    ) {
+      setSelectedSlotId(null);
+    }
+  }, [selectedSlotId, stationQuery.data]);
 
   if (stationQuery.isPending)
     return (
@@ -234,6 +263,7 @@ const styles = StyleSheet.create({
   slotTime: { color: colors.text, fontSize: 15, marginTop: 3 },
   places: { color: colors.primary, fontSize: 13, fontWeight: '700', marginTop: 5 },
   limited: { color: colors.warning },
+  fullPlaces: { color: colors.muted },
   selectButton: { minWidth: 72, paddingHorizontal: 10 },
   continueButton: { marginTop: spacing.sm },
   note: { color: colors.muted, fontSize: 13, lineHeight: 19, marginTop: spacing.md },

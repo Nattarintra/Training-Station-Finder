@@ -13,10 +13,23 @@ export class ApiError extends Error {
 }
 
 const reservations = new Map<string, Reservation>();
+const forcedUnavailableSlots = new Set<string>();
 export type StationListScenario = 'success' | 'empty' | 'error';
 
 let stationListScenario: StationListScenario = 'success';
 const wait = (ms = 350) => new Promise((resolve) => setTimeout(resolve, ms));
+const slotKey = (stationId: string, slotId: string) => `${stationId}:${slotId}`;
+
+function snapshotStation(station: Station): Station {
+  return {
+    ...station,
+    slots: station.slots.map((slot) =>
+      forcedUnavailableSlots.has(slotKey(station.id, slot.id))
+        ? { ...slot, availability: 'unavailable', placesLeft: 0 }
+        : slot,
+    ),
+  };
+}
 
 export function setStationListScenario(scenario: StationListScenario) {
   stationListScenario = scenario;
@@ -31,7 +44,7 @@ export async function getStations(): Promise<Station[]> {
     );
   }
   if (stationListScenario === 'empty') return [];
-  return stations.slice().sort((a, b) => a.distanceKm - b.distanceKm);
+  return stations.map(snapshotStation).sort((a, b) => a.distanceKm - b.distanceKm);
 }
 
 export async function getStation(id: string): Promise<Station> {
@@ -39,7 +52,7 @@ export async function getStation(id: string): Promise<Station> {
   const station = stations.find((item) => item.id === id);
   if (!station)
     throw new ApiError('We could not find that training station.', 'NOT_FOUND');
-  return station;
+  return snapshotStation(station);
 }
 
 export async function createReservation(input: ReservationInput): Promise<Reservation> {
@@ -49,6 +62,9 @@ export async function createReservation(input: ReservationInput): Promise<Reserv
 
   // This slot simulates another person taking the final place before submission.
   if (!slot || slot.availability === 'unavailable' || slot.id === 'harbor-race') {
+    if (slot?.id === 'harbor-race') {
+      forcedUnavailableSlots.add(slotKey(input.stationId, input.slotId));
+    }
     throw new ApiError(
       'That time was just reserved by someone else. Please choose another slot.',
       'SLOT_UNAVAILABLE',
@@ -97,5 +113,6 @@ export async function checkIn(bookingCode: string): Promise<Reservation> {
 
 export function resetMockApi() {
   reservations.clear();
+  forcedUnavailableSlots.clear();
   stationListScenario = 'success';
 }

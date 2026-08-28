@@ -58,6 +58,11 @@ describe('mock API booking lifecycle', () => {
         phone: '+46701234567',
       }),
     ).rejects.toMatchObject({ code: 'SLOT_UNAVAILABLE' });
+    const station = await getStation('harbor');
+    expect(station.slots.find((slot) => slot.id === 'harbor-race')).toMatchObject({
+      availability: 'unavailable',
+      placesLeft: 0,
+    });
   });
 
   it('rejects an invalid check-in code', async () => {
