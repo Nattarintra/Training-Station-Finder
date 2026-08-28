@@ -34,8 +34,10 @@ export default function ReserveScreen() {
   const reservation = useMutation({
     mutationFn: createReservation,
     onSuccess: (data) => router.replace(`/booking/${data.id}`),
-    onError: () => {
-      idempotencyKey.current = null;
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        idempotencyKey.current = null;
+      }
     },
   });
 

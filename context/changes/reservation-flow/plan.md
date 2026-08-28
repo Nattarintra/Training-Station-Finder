@@ -16,7 +16,7 @@ The principal gap is API-level idempotency: `ReservationInput` has no request ke
 
 The reservation form rejects invalid contact data with field-level accessible errors, submits only once per intent, and sends a stable idempotency key so a repeated request returns the original reservation rather than consuming another slot. A slot that becomes unavailable during submission shows specific recovery copy and returns the user to refreshed station availability.
 
-Successful submission navigates to a stable confirmation route that handles loading/missing data, presents the booking ticket and accessible QR pass, and keeps the existing code-based check-in action. Automated tests cover schema behavior, API idempotency/capacity/conflicts, reservation route states and navigation, and confirmation/QR semantics.
+Successful submission navigates to a stable confirmation route that handles loading/missing data, presents the booking ticket and accessible QR pass, allows direct check-in from confirmation using the existing booking code, and shows explicit check-in success. The separate manual `/check-in` route remains available for code entry from elsewhere. Automated tests cover schema behavior, API idempotency/capacity/conflicts, reservation route states and navigation, and confirmation/QR semantics.
 
 ### Key Discoveries:
 
@@ -120,7 +120,7 @@ Protect the stale-slot recovery path and make the existing confirmation/QR exper
 
 **Intent**: Preserve the booking-pass confirmation while giving the QR payload and accessible semantics a stable tested contract.
 
-**Contract**: Confirmation loads the reservation by ID and station details, renders explicit pending/error/missing-slot states, and on success shows station, formatted date/time, customer name, booking code, QR, and check-in navigation. The QR value remains exactly `training-station-finder:${booking.bookingCode}` unless a deliberately documented compatibility change is approved. If extracted, the QR formatter must be pure and covered by unit tests.
+**Contract**: Confirmation loads the reservation by ID and station details, renders explicit pending/error/missing-slot states, and on success shows station, formatted date/time, customer name, booking code, QR, and a direct check-in action that passes the existing booking code to the check-in mutation and exposes an explicit success state. The separate manual `/check-in` route remains available for code entry from elsewhere. The QR value remains exactly `training-station-finder:${booking.bookingCode}` unless a deliberately documented compatibility change is approved. If extracted, the QR formatter must be pure and covered by unit tests.
 
 #### 3. Route behavior tests
 
@@ -128,7 +128,7 @@ Protect the stale-slot recovery path and make the existing confirmation/QR exper
 
 **Intent**: Test user-visible behavior through accessibility roles and public hook/router boundaries, without coupling tests to TanStack Query or Expo internals.
 
-**Contract**: Cover reserve loading/error/missing-slot states, field errors, pending duplicate protection, success replacement navigation, typed conflict copy/back action, booking pending/error states, confirmation details, QR accessible label/value, and check-in route params. Mock `useMutation` with explicit `isPending`, `isError`, `error`, and `mutate` fixtures; mock `useQuery` with explicit pending/success/error data fixtures; mock `useStation` and `useRouter` at their public module boundaries; and mock `react-native-qrcode-svg` with a test component that exposes its received `value` prop. Reset all mutable API state between API tests.
+**Contract**: Cover reserve loading/error/missing-slot states, field errors, pending duplicate protection, success replacement navigation, typed conflict copy/back action, booking pending/error states, confirmation details, QR accessible label/value, direct check-in mutation with the booking code, and explicit check-in success. Mock `useMutation` with explicit `isPending`, `isError`, `error`, and `mutate` fixtures; mock `useQuery` with explicit pending/success/error data fixtures; mock `useStation` and `useRouter` at their public module boundaries; and mock `react-native-qrcode-svg` with a test component that exposes its received `value` prop. Reset all mutable API state between API tests.
 
 ### Success Criteria:
 
@@ -136,14 +136,14 @@ Protect the stale-slot recovery path and make the existing confirmation/QR exper
 
 - Route tests prove unavailable-slot recovery calls `router.back()` and does not navigate to confirmation.
 - Station-detail coverage proves focus return refetch keeps conflict-driven availability current, without introducing duplicate refetch loops.
-- Confirmation tests prove booking details, QR contract, accessible label, check-in navigation, and missing-booking fallback.
+- Confirmation tests prove booking details, QR contract, accessible label, direct check-in mutation/success, and missing-booking fallback.
 - `npm test` passes with existing discovery/detail suites and the new reservation/booking coverage.
 - `npm run format:check` passes.
 
 #### Manual Verification:
 
 - Use the deterministic Harbor race slot, submit the form, choose “Choose another time,” and verify the slot is now unavailable on station details.
-- Complete a normal booking and verify the confirmation ticket, QR visibility, booking code, customer name, date/time, and check-in action on compact phone dimensions.
+- Complete a normal booking and verify the confirmation ticket, QR visibility, booking code, customer name, date/time, direct check-in action, and explicit success state on compact phone dimensions.
 - With VoiceOver or TalkBack, verify field errors, conflict recovery, QR label, and confirmation actions are understandable.
 
 **Implementation Note**: After automated verification passes, pause for manual confirmation of conflict recovery, confirmation layout, and assistive-technology semantics before proceeding to Phase 3.
@@ -208,7 +208,7 @@ Run the full repository quality gate, validate the Expo SDK 54 dependency/runtim
 1. Open a selectable station slot and submit invalid, then valid, contact details; verify field errors and successful navigation.
 2. Press the reservation action repeatedly during its delay; verify one booking and one capacity decrement.
 3. Submit the Harbor race slot; verify the typed conflict message, return action, and refreshed unavailable state.
-4. Complete a normal booking; verify confirmation data, QR label/value, booking code, and check-in navigation.
+4. Complete a normal booking; verify confirmation data, QR label/value, booking code, direct check-in, and explicit success state.
 5. Repeat the flow on compact phone dimensions and with VoiceOver/TalkBack where available.
 
 ## Performance Considerations
@@ -232,6 +232,13 @@ No persisted data migration is required because reservations and idempotency rec
 - Shared button semantics: `src/components/Button.tsx:28-39`
 - Prior architecture: `context/changes/station-discovery/plan.md:33-39`
 - Prior conflict-refresh decision: `context/archive/2026-08-28-station-details/plan.md:95-132`
+
+## Implementation Review Addendum
+
+- Added shared `danger` and `neutral` button/state variants to communicate error and recovery states.
+- Applied danger styling to retry/recovery actions where explicitly requested.
+- Retained the manual `/check-in` route for code entry from elsewhere while confirmation performs direct check-in.
+- Recorded formatting-only updates to unrelated review documents separately from feature behavior.
 
 ## Progress
 
@@ -257,7 +264,7 @@ No persisted data migration is required because reservations and idempotency rec
 
 - [x] 2.1 Route tests prove typed unavailable recovery returns to station details without confirmation — 81f7273
 - [x] 2.2 Station-detail tests preserve focus refetch freshness without loops — 81f7273
-- [x] 2.3 Confirmation tests prove details, QR contract/accessibility, check-in navigation, and missing-booking fallback — 81f7273
+- [x] 2.3 Confirmation tests prove details, QR contract/accessibility, direct check-in mutation/success, and missing-booking fallback — 81f7273
 - [x] 2.4 Full Jest suite passes — 81f7273
 - [x] 2.5 Formatting check passes — 81f7273
 

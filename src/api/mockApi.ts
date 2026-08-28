@@ -74,14 +74,25 @@ export async function createReservation(
   input: CreateReservationInput,
 ): Promise<Reservation> {
   await wait(550);
-  const fingerprint = JSON.stringify({
+  const idempotencyKey = input.idempotencyKey.trim();
+  if (!idempotencyKey) {
+    throw new ApiError('A reservation request key is required.', 'INVALID_REQUEST');
+  }
+  const reservationInput = {
     stationId: input.stationId,
     slotId: input.slotId,
     fullName: input.fullName,
     email: input.email,
     phone: input.phone,
+  };
+  const fingerprint = JSON.stringify({
+    stationId: reservationInput.stationId,
+    slotId: reservationInput.slotId,
+    fullName: reservationInput.fullName,
+    email: reservationInput.email,
+    phone: reservationInput.phone,
   });
-  const previous = idempotentReservations.get(input.idempotencyKey);
+  const previous = idempotentReservations.get(idempotencyKey);
   if (previous) {
     if (previous.fingerprint !== fingerprint) {
       throw new ApiError(
@@ -113,14 +124,14 @@ export async function createReservation(
   const id = `reservation-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const bookingCode = `TSF-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const reservation: Reservation = {
-    ...input,
+    ...reservationInput,
     id,
     bookingCode,
     createdAt: new Date().toISOString(),
     checkedInAt: null,
   };
   reservations.set(id, reservation);
-  idempotentReservations.set(input.idempotencyKey, { fingerprint, reservation });
+  idempotentReservations.set(idempotencyKey, { fingerprint, reservation });
   return reservation;
 }
 

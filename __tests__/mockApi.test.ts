@@ -45,6 +45,7 @@ describe('mock API booking lifecycle', () => {
       idempotencyKey: 'lifecycle-1',
     });
     expect(reservation.bookingCode).toMatch(/^TSF-[A-Z0-9]{6}$/);
+    expect(reservation).not.toHaveProperty('idempotencyKey');
     const checkedIn = await checkIn(reservation.bookingCode.toLowerCase());
     expect(checkedIn.checkedInAt).not.toBeNull();
     const station = await getStation('harbor');
@@ -134,6 +135,19 @@ describe('mock API booking lifecycle', () => {
     expect(
       (await getStation('harbor')).slots.find((slot) => slot.id === 'harbor-1'),
     ).toMatchObject({ placesLeft: 5 });
+  });
+
+  it('rejects empty idempotency keys', async () => {
+    await expect(
+      createReservation({
+        stationId: 'harbor',
+        slotId: 'harbor-1',
+        fullName: 'Alex Morgan',
+        email: 'alex@example.com',
+        phone: '+46701234567',
+        idempotencyKey: '   ',
+      }),
+    ).rejects.toMatchObject({ code: 'INVALID_REQUEST' });
   });
 
   it('rejects reusing a key with different reservation input', async () => {
