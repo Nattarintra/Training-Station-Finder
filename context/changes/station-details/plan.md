@@ -219,6 +219,12 @@ No data migration or compatibility layer is required. The existing `TimeSlot` mo
 - Shared button semantics: `src/components/Button.tsx:28-41`
 - Prior architecture decision: `context/changes/station-discovery/plan.md`
 
+## Review Addendum
+
+- Successful reservations now decrement mock capacity, clamp `placesLeft` at zero, transition exhausted slots to unavailable, and reject further bookings; regression coverage lives in `__tests__/mockApi.test.ts`.
+- An accessible Back control was added at the top of station details in response to manual user feedback (`app/station/[id].tsx:128-135`).
+- Review follow-ups for missing branch coverage and defensive zero-capacity handling are tracked in `context/changes/station-details/follow-ups/review-fixes.md`.
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles.
