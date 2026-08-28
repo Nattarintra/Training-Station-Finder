@@ -258,13 +258,13 @@ No data migration or compatibility layer is required. The default mock API behav
 
 #### Automated
 
-- [x] 3.1 Full test suite passes
-- [x] 3.2 Formatting, strict types, and lint pass
-- [x] 3.3 Expo dependency validation succeeds
-- [x] 3.4 Static web export succeeds
+- [x] 3.1 Full test suite passes — 4af6f1e
+- [x] 3.2 Formatting, strict types, and lint pass — 4af6f1e
+- [x] 3.3 Expo dependency validation succeeds — 4af6f1e
+- [x] 3.4 Static web export succeeds — 4af6f1e
 
 #### Manual
 
-- [x] 3.5 Normal discovery navigation works on iOS and Android viewports
-- [x] 3.6 Discovery states are accessible with mobile assistive technology
-- [x] 3.7 Production experience contains no development controls
+- [x] 3.5 Normal discovery navigation works on iOS and Android viewports — 4af6f1e
+- [x] 3.6 Discovery states are accessible with mobile assistive technology — 4af6f1e
+- [x] 3.7 Production experience contains no development controls — 4af6f1e
