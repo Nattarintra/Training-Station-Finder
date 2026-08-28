@@ -2,11 +2,12 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import BookingScreen from '@/app/booking/[id]';
 import { stations } from '@/src/api/fixtures';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useStation } from '@/src/features/stations/queries';
 
 jest.mock('@tanstack/react-query', () => ({
+  useMutation: jest.fn(),
   useQuery: jest.fn(),
 }));
 
@@ -32,12 +33,13 @@ jest.mock('react-native-qrcode-svg', () => {
   return MockQRCode;
 });
 
+const mockUseMutation = jest.mocked(useMutation);
 const mockUseQuery = jest.mocked(useQuery);
 const mockUseLocalSearchParams = jest.mocked(useLocalSearchParams);
 const mockUseRouter = jest.mocked(useRouter);
 const mockUseStation = jest.mocked(useStation);
 const mockReplace = jest.fn();
-const mockPush = jest.fn();
+const mockMutate = jest.fn();
 const station = stations.find((item) => item.id === 'harbor')!;
 const booking = {
   id: 'reservation-123',
@@ -79,8 +81,13 @@ describe('BookingScreen', () => {
     mockUseLocalSearchParams.mockReturnValue({ id: booking.id });
     mockUseRouter.mockReturnValue({
       replace: mockReplace,
-      push: mockPush,
     } as unknown as ReturnType<typeof useRouter>);
+    mockUseMutation.mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isSuccess: false,
+      mutate: mockMutate,
+    } as unknown as ReturnType<typeof useMutation>);
     mockUseQuery.mockReturnValue(queryResult());
     mockUseStation.mockReturnValue(stationResult());
   });
@@ -98,15 +105,25 @@ describe('BookingScreen', () => {
     );
   });
 
-  it('navigates to code-based check-in from the confirmation', () => {
+  it('checks in with the existing booking code from the confirmation', () => {
     const { getByRole } = render(<BookingScreen />);
 
     fireEvent.press(getByRole('button', { name: 'Check in now' }));
 
-    expect(mockPush).toHaveBeenCalledWith({
-      pathname: '/check-in',
-      params: { code: 'TSF-ABC123' },
-    });
+    expect(mockMutate).toHaveBeenCalledWith('TSF-ABC123');
+  });
+
+  it('clearly confirms a successful automatic check-in', () => {
+    mockUseMutation.mockReturnValue({
+      data: { ...booking, checkedInAt: '2026-08-28T12:05:00.000Z' },
+      isPending: false,
+      isSuccess: true,
+      mutate: mockMutate,
+    } as unknown as ReturnType<typeof useMutation>);
+    const { getByText } = render(<BookingScreen />);
+
+    expect(getByText('Check-in complete')).toBeOnTheScreen();
+    expect(getByText('You’re ready for your session.')).toBeOnTheScreen();
   });
 
   it('recovers from a missing booking by returning to stations', () => {

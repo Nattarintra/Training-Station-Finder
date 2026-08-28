@@ -114,7 +114,6 @@ Protect the stale-slot recovery path and make the existing confirmation/QR exper
 
 **Contract**: `ApiError.code === 'SLOT_UNAVAILABLE'` renders the specific conflict title/message and “Choose another time” action. The action returns to the station route without creating a reservation; focus-triggered refetch updates the selected slot to unavailable. Do not add a second availability source or automatic slot substitution.
 
-
 #### 2. Confirmation and QR presentation
 
 **Files**: `app/booking/[id].tsx`, optionally `src/features/bookings/qr.ts`
@@ -256,26 +255,26 @@ No persisted data migration is required because reservations and idempotency rec
 
 #### Automated
 
-- [x] 2.1 Route tests prove typed unavailable recovery returns to station details without confirmation
-- [x] 2.2 Station-detail tests preserve focus refetch freshness without loops
-- [x] 2.3 Confirmation tests prove details, QR contract/accessibility, check-in navigation, and missing-booking fallback
-- [x] 2.4 Full Jest suite passes
-- [x] 2.5 Formatting check passes
+- [x] 2.1 Route tests prove typed unavailable recovery returns to station details without confirmation — 81f7273
+- [x] 2.2 Station-detail tests preserve focus refetch freshness without loops — 81f7273
+- [x] 2.3 Confirmation tests prove details, QR contract/accessibility, check-in navigation, and missing-booking fallback — 81f7273
+- [x] 2.4 Full Jest suite passes — 81f7273
+- [x] 2.5 Formatting check passes — 81f7273
 
 #### Manual
 
-- [x] 2.6 Harbor race recovery refreshes availability correctly
-- [x] 2.7 Confirmation and QR remain usable on compact devices and with assistive technology
+- [x] 2.6 Harbor race recovery refreshes availability correctly — 81f7273
+- [x] 2.7 Confirmation and QR remain usable on compact devices and with assistive technology — 81f7273
 
 ### Phase 3: Expo 54 Verification and Documentation
 
 #### Automated
 
-- [ ] 3.1 Expo SDK 54 dependency check passes
-- [ ] 3.2 Web export completes without route errors
-- [ ] 3.3 Final typecheck, lint, tests, and formatting checks pass
+- [x] 3.1 Expo SDK 54 dependency check passes
+- [x] 3.2 Web export completes without route errors
+- [x] 3.3 Final typecheck, lint, tests, and formatting checks pass
 
 #### Manual
 
-- [ ] 3.4 End-to-end reservation, recovery, confirmation, QR, and check-in smoke flow passes on target previews
-- [ ] 3.5 Prototype scope remains limited to in-memory bookings and rendered QR confirmation
+- [x] 3.4 End-to-end reservation, recovery, confirmation, QR, and check-in smoke flow passes on target previews
+- [x] 3.5 Prototype scope remains limited to in-memory bookings and rendered QR confirmation

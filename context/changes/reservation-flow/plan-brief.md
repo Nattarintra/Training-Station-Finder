@@ -17,13 +17,13 @@ A stable idempotency key makes repeated requests for one logical submission retu
 
 ## Key Decisions Made
 
-| Decision | Choice | Why | Source |
-| --- | --- | --- | --- |
-| Duplicate prevention | API-level idempotency plus existing UI pending guard | UI protection handles taps; API protection handles repeated requests and retries | Research |
-| Availability authority | Keep final check in mock API and refetch station detail on focus | Preserves the existing single source of truth and conflict-refresh pattern | Research |
-| QR scope | Rendered demonstration booking pass only | Scanning, signing, expiry, and replay prevention would expand scope materially | Research |
-| Architecture | Extend fixture → API → query → route layering | Matches established project patterns and avoids unnecessary abstractions | Research |
-| Verification | Jest/RNTL behavior tests plus Expo 54 checks and manual smoke testing | Matches repository quality gates and accessibility conventions | Plan |
+| Decision               | Choice                                                                | Why                                                                              | Source   |
+| ---------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------- |
+| Duplicate prevention   | API-level idempotency plus existing UI pending guard                  | UI protection handles taps; API protection handles repeated requests and retries | Research |
+| Availability authority | Keep final check in mock API and refetch station detail on focus      | Preserves the existing single source of truth and conflict-refresh pattern       | Research |
+| QR scope               | Rendered demonstration booking pass only                              | Scanning, signing, expiry, and replay prevention would expand scope materially   | Research |
+| Architecture           | Extend fixture → API → query → route layering                         | Matches established project patterns and avoids unnecessary abstractions         | Research |
+| Verification           | Jest/RNTL behavior tests plus Expo 54 checks and manual smoke testing | Matches repository quality gates and accessibility conventions                   | Plan     |
 
 ## Scope
 
@@ -46,11 +46,11 @@ The form creates a stable request key and calls the existing mock API. The API c
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. Idempotent API | Command contract, deduplication, route submit coverage | Key lifecycle must distinguish retries from new attempts |
-| 2. Recovery and confirmation | Conflict/refresh protection and confirmation/QR tests | Avoid changing the existing user-visible QR contract |
-| 3. Expo verification | Full quality gate, SDK 54 validation, truthful docs | Expo-facing edits require versioned documentation review |
+| Phase                        | What it delivers                                       | Key risk                                                 |
+| ---------------------------- | ------------------------------------------------------ | -------------------------------------------------------- |
+| 1. Idempotent API            | Command contract, deduplication, route submit coverage | Key lifecycle must distinguish retries from new attempts |
+| 2. Recovery and confirmation | Conflict/refresh protection and confirmation/QR tests  | Avoid changing the existing user-visible QR contract     |
+| 3. Expo verification         | Full quality gate, SDK 54 validation, truthful docs    | Expo-facing edits require versioned documentation review |
 
 **Prerequisites:** Existing `reservation-flow` research and the current Expo SDK 54 project.
 **Estimated effort:** ~2–3 implementation sessions across 3 phases.

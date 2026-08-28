@@ -101,6 +101,22 @@ describe('mock API booking lifecycle', () => {
     await expect(checkIn('TSF-NOPE00')).rejects.toMatchObject({ code: 'INVALID_CODE' });
   });
 
+  it('keeps repeated check-in requests idempotent', async () => {
+    const reservation = await createReservation({
+      stationId: 'harbor',
+      slotId: 'harbor-1',
+      fullName: 'Alex Morgan',
+      email: 'alex@example.com',
+      phone: '+46701234567',
+      idempotencyKey: 'check-in-once',
+    });
+
+    const first = await checkIn(reservation.bookingCode);
+    const repeated = await checkIn(reservation.bookingCode);
+
+    expect(repeated).toEqual(first);
+  });
+
   it('returns the original reservation for a repeated idempotency key', async () => {
     const input = {
       stationId: 'harbor',
