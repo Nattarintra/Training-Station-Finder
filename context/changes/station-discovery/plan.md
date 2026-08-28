@@ -265,6 +265,6 @@ No data migration or compatibility layer is required. The default mock API behav
 
 #### Manual
 
-- [x] 3.5 Normal discovery navigation works on iOS and Android viewports — 4af6f1e
-- [x] 3.6 Discovery states are accessible with mobile assistive technology — 4af6f1e
+- [ ] 3.5 Normal discovery navigation works on iOS and Android viewports
+- [ ] 3.6 Discovery states are accessible with mobile assistive technology
 - [x] 3.7 Production experience contains no development controls — 4af6f1e
