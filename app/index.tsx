@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/src/components/Button';
@@ -15,12 +15,27 @@ import { colors, radii, spacing } from '@/src/theme';
 export default function HomeScreen() {
   const router = useRouter();
   const stationsQuery = useStations();
+  const stationData = stationsQuery.data ?? [];
   const [scenario, setScenario] = useState<StationListScenario>('success');
+  const retryGuard = useRef(false);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const changeScenario = (nextScenario: StationListScenario) => {
     setScenario(nextScenario);
     setStationListScenario(nextScenario);
     void stationsQuery.refetch();
+  };
+
+  const retry = async () => {
+    if (retryGuard.current) return;
+    retryGuard.current = true;
+    setIsRetrying(true);
+    try {
+      await stationsQuery.refetch();
+    } finally {
+      retryGuard.current = false;
+      setIsRetrying(false);
+    }
   };
 
   return (
@@ -51,25 +66,27 @@ export default function HomeScreen() {
 
       {__DEV__ && <StationScenarioControl value={scenario} onChange={changeScenario} />}
 
-      {stationsQuery.isPending ? (
+      {stationsQuery.isPending && !isRetrying ? (
         <StateView title="Finding stations nearby…" loading />
-      ) : stationsQuery.isError ? (
+      ) : stationsQuery.isError || isRetrying ? (
         <StateView
           title="Stations are unavailable"
           message="We couldn’t load nearby stations. Check your connection and try again."
-          actionLabel="Try again"
-          onAction={() => stationsQuery.refetch()}
+          actionLabel={isRetrying ? 'Trying again…' : 'Try again'}
+          actionLoading={isRetrying}
+          onAction={() => void retry()}
         />
-      ) : stationsQuery.data.length === 0 ? (
+      ) : stationData.length === 0 ? (
         <StateView
           title="No stations nearby"
           message="Try again later as new training times are added regularly."
-          actionLabel="Refresh"
+          actionLabel={stationsQuery.isFetching ? 'Refreshing…' : 'Refresh'}
+          actionLoading={stationsQuery.isFetching}
           onAction={() => stationsQuery.refetch()}
         />
       ) : (
         <View style={styles.list}>
-          {stationsQuery.data.map((station) => (
+          {stationData.map((station) => (
             <StationCard
               key={station.id}
               station={station}

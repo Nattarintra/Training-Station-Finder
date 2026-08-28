@@ -232,27 +232,27 @@ No data migration or compatibility layer is required. The default mock API behav
 
 #### Automated
 
-- [x] 1.1 Mock API scenario tests pass
-- [x] 1.2 Strict types pass for the scenario contract
-- [x] 1.3 Lint passes for scenario implementation
+- [x] 1.1 Mock API scenario tests pass — c99ee93
+- [x] 1.2 Strict types pass for the scenario contract — c99ee93
+- [x] 1.3 Lint passes for scenario implementation — c99ee93
 
 #### Manual
 
-- [x] 1.4 Development scenarios display corresponding discovery states
-- [x] 1.5 Production UI omits scenario controls
+- [x] 1.4 Development scenarios display corresponding discovery states — c99ee93
+- [x] 1.5 Production UI omits scenario controls — c99ee93
 
 ### Phase 2: Resilient Discovery UI
 
 #### Automated
 
-- [ ] 2.1 Discovery retry and refresh behavior tests pass
-- [ ] 2.2 Station card accessibility and layout tests pass
-- [ ] 2.3 Full type-check and lint pass
+- [x] 2.1 Discovery retry and refresh behavior tests pass
+- [x] 2.2 Station card accessibility and layout tests pass
+- [x] 2.3 Full type-check and lint pass
 
 #### Manual
 
-- [ ] 2.4 Compact viewport and large-text card layout remains readable
-- [ ] 2.5 Retry and refresh retain context with visible busy state
+- [x] 2.4 Compact viewport and large-text card layout remains readable
+- [x] 2.5 Retry and refresh retain context with visible busy state
 
 ### Phase 3: Behavior Coverage and Documentation
 
