@@ -241,13 +241,13 @@ No data migration or compatibility layer is required. The existing `TimeSlot` mo
 
 #### Automated
 
-- [x] 2.1 Detail query refetches on focus after navigation return
-- [x] 2.2 Existing reservation conflict and back-navigation behavior remains intact
-- [x] 2.3 Full typecheck and lint pass
+- [x] 2.1 Detail query refetches on focus after navigation return — d88b314
+- [x] 2.2 Existing reservation conflict and back-navigation behavior remains intact — d88b314
+- [x] 2.3 Full typecheck and lint pass — d88b314
 
 #### Manual
 
-- [x] 2.4 Conflict return refreshes availability without navigation instability
+- [x] 2.4 Conflict return refreshes availability without navigation instability — d88b314
 
 ### Phase 3: Coverage, Expo Validation, and Documentation
 
