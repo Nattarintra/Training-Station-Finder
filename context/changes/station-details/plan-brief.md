@@ -17,15 +17,15 @@ Users see one clear chronological list with available, limited, selected, and fu
 
 ## Key Decisions Made
 
-| Decision | Choice | Why | Source |
-| --- | --- | --- | --- |
-| Selection flow | Explicit selection + Continue | Gives users a persistent, reviewable choice before reservation. | Plan |
-| Slot organization | One chronological list | Preserves the current scan path and limits scope. | Plan |
-| Conflict refresh | Refetch on detail focus | Updates availability after back navigation with minimal coupling. | Research / Plan |
-| Accessibility | Full contextual semantics | Makes date/time/status and selected state clear to assistive technology. | Plan |
-| Data model | Keep existing `TimeSlot` contract | Existing fields already support all required presentation states. | Research |
-| Automated tests | Detail integration + focused component coverage | Protects route, navigation, semantics, and lifecycle behavior. | Plan |
-| No-selection behavior | Continue disabled | Prevents invalid navigation and makes the required step explicit. | Plan |
+| Decision              | Choice                                          | Why                                                                      | Source          |
+| --------------------- | ----------------------------------------------- | ------------------------------------------------------------------------ | --------------- |
+| Selection flow        | Explicit selection + Continue                   | Gives users a persistent, reviewable choice before reservation.          | Plan            |
+| Slot organization     | One chronological list                          | Preserves the current scan path and limits scope.                        | Plan            |
+| Conflict refresh      | Refetch on detail focus                         | Updates availability after back navigation with minimal coupling.        | Research / Plan |
+| Accessibility         | Full contextual semantics                       | Makes date/time/status and selected state clear to assistive technology. | Plan            |
+| Data model            | Keep existing `TimeSlot` contract               | Existing fields already support all required presentation states.        | Research        |
+| Automated tests       | Detail integration + focused component coverage | Protects route, navigation, semantics, and lifecycle behavior.           | Plan            |
+| No-selection behavior | Continue disabled                               | Prevents invalid navigation and makes the required step explicit.        | Plan            |
 
 ## Scope
 
@@ -53,11 +53,11 @@ The reservation API remains authoritative for final availability.
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. Selection and presentation | Explicit selection, status hierarchy, accessibility, responsive layout | Interaction changes must remain obvious and testable. |
-| 2. Return freshness | Detail refetch after reservation navigation/conflict | Avoiding focus refetch loops or stale query assumptions. |
-| 3. Coverage and validation | Route tests, quality gates, and documentation alignment | Expo/router test mocks must stay at public boundaries. |
+| Phase                         | What it delivers                                                       | Key risk                                                 |
+| ----------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| 1. Selection and presentation | Explicit selection, status hierarchy, accessibility, responsive layout | Interaction changes must remain obvious and testable.    |
+| 2. Return freshness           | Detail refetch after reservation navigation/conflict                   | Avoiding focus refetch loops or stale query assumptions. |
+| 3. Coverage and validation    | Route tests, quality gates, and documentation alignment                | Expo/router test mocks must stay at public boundaries.   |
 
 **Prerequisites:** Existing `station-details` research and Expo SDK 54 project setup.  
 **Estimated effort:** ~2–3 implementation sessions across 3 phases.

@@ -14,6 +14,7 @@ export class ApiError extends Error {
 
 const reservations = new Map<string, Reservation>();
 const forcedUnavailableSlots = new Set<string>();
+const reservedPlaces = new Map<string, number>();
 export type StationListScenario = 'success' | 'empty' | 'error';
 
 let stationListScenario: StationListScenario = 'success';
@@ -23,11 +24,17 @@ const slotKey = (stationId: string, slotId: string) => `${stationId}:${slotId}`;
 function snapshotStation(station: Station): Station {
   return {
     ...station,
-    slots: station.slots.map((slot) =>
-      forcedUnavailableSlots.has(slotKey(station.id, slot.id))
+    slots: station.slots.map((slot) => {
+      const placesLeft = Math.max(
+        0,
+        slot.placesLeft - (reservedPlaces.get(slotKey(station.id, slot.id)) ?? 0),
+      );
+      const unavailable =
+        forcedUnavailableSlots.has(slotKey(station.id, slot.id)) || placesLeft === 0;
+      return unavailable
         ? { ...slot, availability: 'unavailable', placesLeft: 0 }
-        : slot,
-    ),
+        : { ...slot, placesLeft };
+    }),
   };
 }
 
@@ -58,7 +65,9 @@ export async function getStation(id: string): Promise<Station> {
 export async function createReservation(input: ReservationInput): Promise<Reservation> {
   await wait(550);
   const station = stations.find((item) => item.id === input.stationId);
-  const slot = station?.slots.find((item) => item.id === input.slotId);
+  const slot = station
+    ? snapshotStation(station).slots.find((item) => item.id === input.slotId)
+    : undefined;
 
   // This slot simulates another person taking the final place before submission.
   if (!slot || slot.availability === 'unavailable' || slot.id === 'harbor-race') {
@@ -70,6 +79,9 @@ export async function createReservation(input: ReservationInput): Promise<Reserv
       'SLOT_UNAVAILABLE',
     );
   }
+
+  const key = slotKey(input.stationId, input.slotId);
+  reservedPlaces.set(key, (reservedPlaces.get(key) ?? 0) + 1);
 
   const id = `reservation-${Date.now()}`;
   const bookingCode = `TSF-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -114,5 +126,6 @@ export async function checkIn(bookingCode: string): Promise<Reservation> {
 export function resetMockApi() {
   reservations.clear();
   forcedUnavailableSlots.clear();
+  reservedPlaces.clear();
   stationListScenario = 'success';
 }

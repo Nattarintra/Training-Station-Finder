@@ -40,7 +40,7 @@ No environment variables are required, so there is intentionally no `.env.exampl
 
 1. In development, use **Development preview** on the home screen to demonstrate normal, empty, and error station responses. Return it to **Normal** afterward.
 2. Open **Harbor Skills Hub**.
-3. Select a normal available slot and complete the form to see confirmation and QR check-in.
+3. Select a normal available slot, then press **Continue** to complete the form and see confirmation and QR check-in.
 4. To see conflict recovery, choose the Harbor slot with one place left. The mock API simulates that final place being taken during submission.
 5. Check in from confirmation; the code is prefilled. A made-up code demonstrates the invalid-code state.
 

@@ -253,15 +253,15 @@ No data migration or compatibility layer is required. The existing `TimeSlot` mo
 
 #### Automated
 
-- [ ] 3.1 Full Jest suite passes
-- [ ] 3.2 Formatting check passes
-- [ ] 3.3 Strict typecheck passes
-- [ ] 3.4 ESLint passes
-- [ ] 3.5 Expo dependency validation succeeds
-- [ ] 3.6 Static web export succeeds
+- [x] 3.1 Full Jest suite passes
+- [x] 3.2 Formatting check passes (station-details scope; unrelated baseline exception accepted)
+- [x] 3.3 Strict typecheck passes
+- [x] 3.4 ESLint passes
+- [x] 3.5 Expo dependency validation succeeds
+- [x] 3.6 Static web export succeeds
 
 #### Manual
 
-- [ ] 3.7 End-to-end station selection and reservation smoke flow works on mobile-sized viewports
-- [ ] 3.8 Availability, accessibility, and conflict-return states pass manual review
-- [ ] 3.9 Production experience contains no unintended development controls
+- [x] 3.7 End-to-end station selection and reservation smoke flow works on mobile-sized viewports
+- [x] 3.8 Availability, accessibility, and conflict-return states pass manual review
+- [x] 3.9 Production experience contains no unintended development controls

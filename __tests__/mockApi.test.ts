@@ -46,6 +46,30 @@ describe('mock API booking lifecycle', () => {
     expect(reservation.bookingCode).toMatch(/^TSF-[A-Z0-9]{6}$/);
     const checkedIn = await checkIn(reservation.bookingCode.toLowerCase());
     expect(checkedIn.checkedInAt).not.toBeNull();
+    const station = await getStation('harbor');
+    expect(station.slots.find((slot) => slot.id === 'harbor-1')).toMatchObject({
+      placesLeft: 5,
+    });
+  });
+
+  it('clamps capacity at zero and rejects bookings after the slot is full', async () => {
+    const input = {
+      stationId: 'harbor',
+      slotId: 'harbor-1',
+      fullName: 'Alex Morgan',
+      email: 'alex@example.com',
+      phone: '+46701234567',
+    };
+
+    await Promise.all(Array.from({ length: 6 }, () => createReservation(input)));
+    const station = await getStation('harbor');
+    expect(station.slots.find((slot) => slot.id === 'harbor-1')).toMatchObject({
+      availability: 'unavailable',
+      placesLeft: 0,
+    });
+    await expect(createReservation(input)).rejects.toMatchObject({
+      code: 'SLOT_UNAVAILABLE',
+    });
   });
 
   it('returns a recoverable error when the final slot was taken', async () => {
