@@ -2,6 +2,7 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 
 import HomeScreen from '@/app/index';
 import { stations } from '@/src/api/fixtures';
+import { setStationListScenario } from '@/src/api/mockApi';
 import { useStations } from '@/src/features/stations/queries';
 
 const mockPush = jest.fn();
@@ -12,6 +13,11 @@ jest.mock('expo-router', () => ({
 
 jest.mock('@/src/features/stations/queries', () => ({
   useStations: jest.fn(),
+}));
+
+jest.mock('@/src/api/mockApi', () => ({
+  ...jest.requireActual('@/src/api/mockApi'),
+  setStationListScenario: jest.fn(),
 }));
 
 const mockUseStations = jest.mocked(useStations);
@@ -92,5 +98,15 @@ describe('HomeScreen station discovery', () => {
       }),
     );
     expect(mockPush).toHaveBeenCalledWith('/station/harbor');
+  });
+
+  it('switches the development response scenario and refetches', () => {
+    const refetch = jest.fn().mockResolvedValue({ data: stations });
+    mockUseStations.mockReturnValue(queryResult({ data: stations, refetch }));
+    const { getByRole } = render(<HomeScreen />);
+
+    fireEvent.press(getByRole('radio', { name: 'Error station response' }));
+    expect(setStationListScenario).toHaveBeenCalledWith('error');
+    expect(refetch).toHaveBeenCalledTimes(1);
   });
 });

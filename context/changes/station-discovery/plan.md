@@ -245,26 +245,26 @@ No data migration or compatibility layer is required. The default mock API behav
 
 #### Automated
 
-- [x] 2.1 Discovery retry and refresh behavior tests pass
-- [x] 2.2 Station card accessibility and layout tests pass
-- [x] 2.3 Full type-check and lint pass
+- [x] 2.1 Discovery retry and refresh behavior tests pass — 68fe072
+- [x] 2.2 Station card accessibility and layout tests pass — 68fe072
+- [x] 2.3 Full type-check and lint pass — 68fe072
 
 #### Manual
 
-- [x] 2.4 Compact viewport and large-text card layout remains readable
-- [x] 2.5 Retry and refresh retain context with visible busy state
+- [x] 2.4 Compact viewport and large-text card layout remains readable — 68fe072
+- [x] 2.5 Retry and refresh retain context with visible busy state — 68fe072
 
 ### Phase 3: Behavior Coverage and Documentation
 
 #### Automated
 
-- [ ] 3.1 Full test suite passes
-- [ ] 3.2 Formatting, strict types, and lint pass
-- [ ] 3.3 Expo dependency validation succeeds
-- [ ] 3.4 Static web export succeeds
+- [x] 3.1 Full test suite passes
+- [x] 3.2 Formatting, strict types, and lint pass
+- [x] 3.3 Expo dependency validation succeeds
+- [x] 3.4 Static web export succeeds
 
 #### Manual
 
-- [ ] 3.5 Normal discovery navigation works on iOS and Android viewports
-- [ ] 3.6 Discovery states are accessible with mobile assistive technology
-- [ ] 3.7 Production experience contains no development controls
+- [x] 3.5 Normal discovery navigation works on iOS and Android viewports
+- [x] 3.6 Discovery states are accessible with mobile assistive technology
+- [x] 3.7 Production experience contains no development controls

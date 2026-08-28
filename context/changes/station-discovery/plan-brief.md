@@ -17,14 +17,14 @@ Development reviewers can select normal, empty, or error scenarios and immediate
 
 ## Key Decisions Made
 
-| Decision | Choice | Why | Source |
-| --- | --- | --- | --- |
-| Scenario access | Development-only controls | Makes states demonstrable without weakening production presentation | Plan |
-| Retry UX | Keep context with busy button | Reuses accessible button behavior and avoids layout churn | Plan |
-| Responsive scope | Adaptive card heading | Addresses the concrete narrow-screen risk without redesigning the app | Plan |
-| Test boundary | Discovery behavior only | Preserves one-feature-per-change lifecycle | Plan |
-| Architecture | Extend mock API boundary | Empty and error are simulated server outcomes | Research |
-| List rendering | Keep current small list | Three mock stations do not justify virtualization | Research |
+| Decision         | Choice                        | Why                                                                   | Source   |
+| ---------------- | ----------------------------- | --------------------------------------------------------------------- | -------- |
+| Scenario access  | Development-only controls     | Makes states demonstrable without weakening production presentation   | Plan     |
+| Retry UX         | Keep context with busy button | Reuses accessible button behavior and avoids layout churn             | Plan     |
+| Responsive scope | Adaptive card heading         | Addresses the concrete narrow-screen risk without redesigning the app | Plan     |
+| Test boundary    | Discovery behavior only       | Preserves one-feature-per-change lifecycle                            | Plan     |
+| Architecture     | Extend mock API boundary      | Empty and error are simulated server outcomes                         | Research |
+| List rendering   | Keep current small list       | Three mock stations do not justify virtualization                     | Research |
 
 ## Scope
 
@@ -50,11 +50,11 @@ The mock API owns a deterministic station-list scenario. The home route composes
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. Deterministic scenarios | Mock outcomes and development selector | Demo behavior leaking into production |
-| 2. Resilient UI | Busy retry/refresh and adaptive cards | Accessibility or layout regression |
-| 3. Coverage and docs | Route/card tests and quality alignment | Brittle mocks or inaccurate documentation |
+| Phase                      | What it delivers                       | Key risk                                  |
+| -------------------------- | -------------------------------------- | ----------------------------------------- |
+| 1. Deterministic scenarios | Mock outcomes and development selector | Demo behavior leaking into production     |
+| 2. Resilient UI            | Busy retry/refresh and adaptive cards  | Accessibility or layout regression        |
+| 3. Coverage and docs       | Route/card tests and quality alignment | Brittle mocks or inaccurate documentation |
 
 **Prerequisites:** Existing Expo SDK 54 app and passing baseline quality commands.  
 **Estimated effort:** One focused implementation session across three checkpointed phases.

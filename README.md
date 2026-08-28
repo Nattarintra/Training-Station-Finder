@@ -1,50 +1,114 @@
-# Welcome to your Expo app 👋
+# Training Station Finder
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A portfolio-quality Expo application for discovering nearby practice stations, reserving a time, receiving a QR booking pass, and simulating on-site check-in.
 
-## Get started
+This is an original, independent portfolio concept. It is not affiliated with or endorsed by Laerdal or any other training provider.
 
-1. Install dependencies
+## Highlights
 
-   ```bash
-   npm install
-   ```
+- Nearby stations ordered by deterministic mock distance
+- Station details, amenities, capacity, and available time slots
+- Strictly validated contact form with duplicate submission protection
+- Recoverable conflict when another user takes the last slot
+- Booking confirmation with QR and human-readable booking codes
+- Simulated code-based check-in with invalid-code feedback
+- Loading, empty, error/retry, unavailable, and success states
+- Accessible names, state announcements, and minimum 48-point controls
+- Responsive content width for common phones and tablets
 
-2. Start the app
+## Run locally
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Requirements: Node.js 22+, npm, and an iOS Simulator, Android Emulator, or compatible Expo client.
 
 ```bash
-npm run reset-project
+npm ci
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Then press `i` for iOS, `a` for Android, or scan the QR code. Quality commands:
 
-## Learn more
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run format:check
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+No environment variables are required, so there is intentionally no `.env.example`.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Demo path
 
-## Join the community
+1. In development, use **Development preview** on the home screen to demonstrate normal, empty, and error station responses. Return it to **Normal** afterward.
+2. Open **Harbor Skills Hub**.
+3. Select a normal available slot and complete the form to see confirmation and QR check-in.
+4. To see conflict recovery, choose the Harbor slot with one place left. The mock API simulates that final place being taken during submission.
+5. Check in from confirmation; the code is prefilled. A made-up code demonstrates the invalid-code state.
 
-Join our community of developers creating universal apps.
+The preview controls are guarded by `__DEV__` and are not rendered in production-mode apps or exports.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Architecture
+
+```text
+app/                       Expo Router routes and navigation composition
+src/api/                   Async mock API and station fixtures
+src/components/            Reusable controls and screen/state primitives
+src/features/bookings/     Booking and check-in validation schemas
+src/features/stations/     Station query hooks and domain UI
+src/providers/             Application providers and query policy
+src/theme/                 Small visual token set
+src/types/                 Strict domain contracts
+src/utils/                 Presentation formatting
+__tests__/                 API lifecycle, validation, and accessibility tests
+.github/workflows/         CI quality gate
+```
+
+TanStack Query owns asynchronous server-like state and retry policy. The API boundary uses delays and typed errors to behave like a network service while retaining an entirely in-memory implementation. React Hook Form limits rerenders and Zod provides one validation contract. Expo Router keeps screens addressable without another navigation abstraction.
+
+The booking map lives inside the mock API module. This is intentionally session-only: reloading the JavaScript bundle clears reservations.
+
+## Data model
+
+- `Station`: identity, address, area, distance, content, amenities, and slots.
+- `TimeSlot`: start/end timestamps, availability state, and remaining capacity.
+- `ReservationInput`: station/slot references plus name, email, and phone.
+- `Reservation`: input data plus ID, booking code, creation time, and optional check-in time.
+- `ApiError`: a recoverable typed code for missing records, unavailable slots, or invalid booking codes.
+
+## Testing
+
+Jest tests cover contact and code validation, normalization, station sorting and response scenarios, missing records, the reservation-to-check-in lifecycle, concurrent slot conflict, invalid codes, discovery screen states and retry behavior, station navigation, and accessible component interactions. React Native Testing Library exercises behavior through accessibility roles.
+
+CI runs clean install, formatting verification, strict type-checking, lint, and tests for pushes to `main` and pull requests.
+
+## Trade-offs
+
+- Location uses stable sample distances. Device permission and geospatial handling require native/privacy work beyond this journey.
+- Reservation state is not persisted. This keeps the no-backend exercise honest while preserving a replaceable API-shaped boundary.
+- QR data uses a custom demonstration payload. Entry is simulated because camera permissions are outside the requested scope.
+- Dates are relative to device time and use the device locale. A production API would supply venue timezone metadata.
+- The app uses one light theme. Semantic tokens keep dark mode incremental.
+
+## Screenshots
+
+Add simulator captures here before publishing the portfolio repository:
+
+| Nearby stations | Choose a time | Booking QR   | Check-in     |
+| --------------- | ------------- | ------------ | ------------ |
+| _Screenshot_    | _Screenshot_  | _Screenshot_ | _Screenshot_ |
+
+Recommended capture sizes are iPhone 15/16 and a compact Android device to show layout adaptability.
+
+## Production improvements
+
+- Replace mocks with authenticated HTTPS endpoints, idempotency keys, server validation, and durable reservations.
+- Add consent-based device location, distance units, map/list choice, and manual-location fallback.
+- Implement server-authoritative slot holds, expiry, realtime availability, and offline-aware retries.
+- Define secure data storage, retention/consent policies, telemetry redaction, and privacy/security review.
+- Add camera QR scanning, signed payloads, replay prevention, and a real attendance integration.
+- Add analytics, crash reporting, flags, deep-link validation, localization, dark mode, and device E2E tests.
+- Introduce EAS profiles, environment separation, signed releases, staged rollout, and monitoring.
+- Perform VoiceOver/TalkBack, dynamic type, reduced-motion, contrast, slow-network, and device QA.
+
+## Scope boundaries
+
+There is no database, authentication, payment flow, production location tracking, or real certification/attendance service. All people, stations, addresses, and codes are fictional.
