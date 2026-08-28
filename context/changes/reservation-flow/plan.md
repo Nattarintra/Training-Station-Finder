@@ -242,30 +242,30 @@ No persisted data migration is required because reservations and idempotency rec
 
 #### Automated
 
-- [x] 1.1 Schema tests preserve trimmed valid input and reject invalid contact details
-- [x] 1.2 API tests prove same-key requests return one reservation and consume one capacity place
-- [x] 1.3 API tests preserve different-key capacity/conflict behavior and reset isolation
-- [x] 1.4 Reservation route tests prove invalid submission, pending duplicate protection, and one success navigation
-- [x] 1.5 Typecheck and lint pass
+- [x] 1.1 Schema tests preserve trimmed valid input and reject invalid contact details — 03218b7
+- [x] 1.2 API tests prove same-key requests return one reservation and consume one capacity place — 03218b7
+- [x] 1.3 API tests preserve different-key capacity/conflict behavior and reset isolation — 03218b7
+- [x] 1.4 Reservation route tests prove invalid submission, pending duplicate protection, and one success navigation — 03218b7
+- [x] 1.5 Typecheck and lint pass — 03218b7
 
 #### Manual
 
-- [x] 1.6 Expo preview confirms busy submit behavior and one capacity decrement
+- [x] 1.6 Expo preview confirms busy submit behavior and one capacity decrement — 03218b7
 
 ### Phase 2: Conflict Recovery and Confirmation Contract
 
 #### Automated
 
-- [ ] 2.1 Route tests prove typed unavailable recovery returns to station details without confirmation
-- [ ] 2.2 Station-detail tests preserve focus refetch freshness without loops
-- [ ] 2.3 Confirmation tests prove details, QR contract/accessibility, check-in navigation, and missing-booking fallback
-- [ ] 2.4 Full Jest suite passes
-- [ ] 2.5 Formatting check passes
+- [x] 2.1 Route tests prove typed unavailable recovery returns to station details without confirmation
+- [x] 2.2 Station-detail tests preserve focus refetch freshness without loops
+- [x] 2.3 Confirmation tests prove details, QR contract/accessibility, check-in navigation, and missing-booking fallback
+- [x] 2.4 Full Jest suite passes
+- [x] 2.5 Formatting check passes
 
 #### Manual
 
-- [ ] 2.6 Harbor race recovery refreshes availability correctly
-- [ ] 2.7 Confirmation and QR remain usable on compact devices and with assistive technology
+- [x] 2.6 Harbor race recovery refreshes availability correctly
+- [x] 2.7 Confirmation and QR remain usable on compact devices and with assistive technology
 
 ### Phase 3: Expo 54 Verification and Documentation
 

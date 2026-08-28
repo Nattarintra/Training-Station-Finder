@@ -1,6 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import ReserveScreen from '@/app/reserve';
+import { ApiError } from '@/src/api/mockApi';
 import { stations } from '@/src/api/fixtures';
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -25,6 +26,7 @@ const mockUseRouter = jest.mocked(useRouter);
 const mockUseStation = jest.mocked(useStation);
 const mockMutate = jest.fn();
 const mockReplace = jest.fn();
+const mockBack = jest.fn();
 let mutationOptions: { onSuccess?: (data: { id: string }) => void } | undefined;
 
 const station = stations.find((item) => item.id === 'harbor')!;
@@ -45,9 +47,10 @@ describe('ReserveScreen', () => {
     jest.clearAllMocks();
     mutationOptions = undefined;
     mockUseLocalSearchParams.mockReturnValue({ stationId: 'harbor', slotId: 'harbor-1' });
-    mockUseRouter.mockReturnValue({ replace: mockReplace } as unknown as ReturnType<
-      typeof useRouter
-    >);
+    mockUseRouter.mockReturnValue({
+      replace: mockReplace,
+      back: mockBack,
+    } as unknown as ReturnType<typeof useRouter>);
     mockUseStation.mockReturnValue(stationResult());
     mockUseMutation.mockImplementation((options) => {
       mutationOptions = options as typeof mutationOptions;
@@ -114,5 +117,23 @@ describe('ReserveScreen', () => {
     mutationOptions?.onSuccess?.({ id: 'reservation-123' });
 
     expect(mockReplace).toHaveBeenCalledWith('/booking/reservation-123');
+  });
+
+  it('shows typed conflict recovery and returns to choose another time', () => {
+    mockUseMutation.mockReturnValue({
+      isPending: false,
+      isError: true,
+      error: new ApiError(
+        'That time was just reserved by someone else. Please choose another slot.',
+        'SLOT_UNAVAILABLE',
+      ),
+      mutate: mockMutate,
+    } as unknown as ReturnType<typeof useMutation>);
+    const { getByRole, getByText } = render(<ReserveScreen />);
+
+    expect(getByText('This time is no longer available')).toBeOnTheScreen();
+    fireEvent.press(getByRole('button', { name: 'Choose another time' }));
+    expect(mockBack).toHaveBeenCalledTimes(1);
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 });
