@@ -37,3 +37,7 @@ export interface Reservation extends ReservationInput {
   createdAt: string;
   checkedInAt: string | null;
 }
+
+export interface CheckInResult extends Reservation {
+  alreadyCheckedIn: boolean;
+}

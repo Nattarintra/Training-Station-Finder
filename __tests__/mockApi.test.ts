@@ -48,6 +48,7 @@ describe('mock API booking lifecycle', () => {
     expect(reservation).not.toHaveProperty('idempotencyKey');
     const checkedIn = await checkIn(reservation.bookingCode.toLowerCase());
     expect(checkedIn.checkedInAt).not.toBeNull();
+    expect(checkedIn.alreadyCheckedIn).toBe(false);
     const station = await getStation('harbor');
     expect(station.slots.find((slot) => slot.id === 'harbor-1')).toMatchObject({
       placesLeft: 5,
@@ -115,7 +116,13 @@ describe('mock API booking lifecycle', () => {
     const first = await checkIn(reservation.bookingCode);
     const repeated = await checkIn(reservation.bookingCode);
 
-    expect(repeated).toEqual(first);
+    expect(first.alreadyCheckedIn).toBe(false);
+    expect(repeated.alreadyCheckedIn).toBe(true);
+    expect(repeated).toMatchObject({
+      ...first,
+      alreadyCheckedIn: true,
+    });
+    expect(repeated.checkedInAt).toBe(first.checkedInAt);
   });
 
   it('returns the original reservation for a repeated idempotency key', async () => {

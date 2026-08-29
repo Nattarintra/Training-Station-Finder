@@ -106,8 +106,14 @@ export default function BookingScreen() {
       />
       {checkInMutation.isSuccess && (
         <View accessibilityRole="alert" style={styles.checkInNotice}>
-          <Text style={styles.checkInNoticeTitle}>Check-in complete</Text>
-          <Text style={styles.checkInNoticeText}>You’re ready for your session.</Text>
+          <Text style={styles.checkInNoticeTitle}>
+            {checkInMutation.data.alreadyCheckedIn ? 'Already checked in' : 'Check-in complete'}
+          </Text>
+          <Text style={styles.checkInNoticeText}>
+            {checkInMutation.data.alreadyCheckedIn
+              ? 'This code has already been checked in.'
+              : 'You’re ready for your session.'}
+          </Text>
         </View>
       )}
       <Button

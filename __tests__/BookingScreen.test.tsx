@@ -115,7 +115,7 @@ describe('BookingScreen', () => {
 
   it('clearly confirms a successful automatic check-in', () => {
     mockUseMutation.mockReturnValue({
-      data: { ...booking, checkedInAt: '2026-08-28T12:05:00.000Z' },
+      data: { ...booking, checkedInAt: '2026-08-28T12:05:00.000Z', alreadyCheckedIn: false },
       isPending: false,
       isSuccess: true,
       mutate: mockMutate,
@@ -124,6 +124,19 @@ describe('BookingScreen', () => {
 
     expect(getByText('Check-in complete')).toBeOnTheScreen();
     expect(getByText('You’re ready for your session.')).toBeOnTheScreen();
+  });
+
+  it('labels a repeated confirmation check-in as already completed', () => {
+    mockUseMutation.mockReturnValue({
+      data: { ...booking, checkedInAt: '2026-08-28T12:05:00.000Z', alreadyCheckedIn: true },
+      isPending: false,
+      isSuccess: true,
+      mutate: mockMutate,
+    } as unknown as ReturnType<typeof useMutation>);
+    const { getByText } = render(<BookingScreen />);
+
+    expect(getByText('Already checked in')).toBeOnTheScreen();
+    expect(getByText('This code has already been checked in.')).toBeOnTheScreen();
   });
 
   it('recovers from a missing booking by returning to stations', () => {

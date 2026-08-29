@@ -1,5 +1,5 @@
 import { stations } from '@/src/api/fixtures';
-import { CreateReservationInput, Reservation, Station } from '@/src/types/domain';
+import { CheckInResult, CreateReservationInput, Reservation, Station } from '@/src/types/domain';
 
 export class ApiError extends Error {
   constructor(
@@ -143,7 +143,7 @@ export async function getReservation(id: string): Promise<Reservation> {
   return reservation;
 }
 
-export async function checkIn(bookingCode: string): Promise<Reservation> {
+export async function checkIn(bookingCode: string): Promise<CheckInResult> {
   await wait(450);
   const normalized = bookingCode.trim().toUpperCase();
   const reservation = [...reservations.values()].find(
@@ -154,9 +154,11 @@ export async function checkIn(bookingCode: string): Promise<Reservation> {
       'Booking code not found. Check the code and try again.',
       'INVALID_CODE',
     );
+  const alreadyCheckedIn = reservation.checkedInAt !== null;
   const updated = {
     ...reservation,
     checkedInAt: reservation.checkedInAt ?? new Date().toISOString(),
+    alreadyCheckedIn,
   };
   reservations.set(updated.id, updated);
   return updated;
