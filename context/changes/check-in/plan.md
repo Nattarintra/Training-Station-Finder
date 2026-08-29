@@ -220,9 +220,9 @@ None. No persisted data, schema, dependency, or route migration is required.
 
 #### Automated
 
-- [x] 3.1 Progress section contains one parseable entry for every phase success criterion
-- [x] 3.2 Change folder contains `change.md`, `research.md`, `plan.md`, and `plan-brief.md`
+- [x] 3.1 Progress section contains one parseable entry for every phase success criterion — bf20775
+- [x] 3.2 Change folder contains `change.md`, `research.md`, `plan.md`, and `plan-brief.md` — bf20775
 
 #### Manual
 
-- [x] 3.3 Plan brief communicates scope, decisions, and verification commands without requiring the full plan
+- [x] 3.3 Plan brief communicates scope, decisions, and verification commands without requiring the full plan — bf20775
