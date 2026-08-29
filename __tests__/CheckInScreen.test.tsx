@@ -99,10 +99,12 @@ describe('CheckInScreen', () => {
 
   it('disables the action and prevents submission while pending', () => {
     mockUseMutation.mockReturnValue(mutationResult({ isPending: true }));
-    const { getByRole } = render(<CheckInScreen />);
+    const { getByRole, getByTestId } = render(<CheckInScreen />);
     const button = getByRole('button', { name: 'Check in' });
 
     expect(button).toBeDisabled();
+    expect(button.props.accessibilityState).toMatchObject({ busy: true });
+    expect(getByTestId('button-loading-indicator')).toBeOnTheScreen();
     fireEvent.press(button);
     expect(mockMutate).not.toHaveBeenCalled();
   });

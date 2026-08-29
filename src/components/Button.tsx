@@ -53,6 +53,8 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
+          accessibilityRole="progressbar"
+          testID="button-loading-indicator"
           color={
             variant === 'primary'
               ? colors.surface

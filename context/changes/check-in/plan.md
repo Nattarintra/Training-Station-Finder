@@ -129,7 +129,7 @@ Keep the change artifacts aligned with the implemented test coverage and leave a
 
 #### 1. Update change progress and implementation notes
 
-**Files**: `context/changes/check-in/plan.md`, `context/changes/check-in/change.md`
+**Files**: `context/changes/check-in/plan.md`, `context/changes/check-in/change.md`, `context/changes/check-in/reviews/plan-review.md`, `context/changes/check-in/reviews/impl-review.md`
 
 **Intent**: Record completed verification steps through the canonical progress section and preserve the plan as the implementation handoff.
 
