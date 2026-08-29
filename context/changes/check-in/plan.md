@@ -205,24 +205,24 @@ None. No persisted data, schema, dependency, or route migration is required.
 
 #### Automated
 
-- [x] 2.1 Complete Jest suite passes with `npm test`
-- [x] 2.2 Strict TypeScript passes with `npm run typecheck`
-- [x] 2.3 ESLint passes with `npm run lint`
-- [x] 2.4 Formatting check passes with `npm run format:check`
+- [x] 2.1 Complete Jest suite passes with `npm test` — 8a4fd5b
+- [x] 2.2 Strict TypeScript passes with `npm run typecheck` — 8a4fd5b
+- [x] 2.3 ESLint passes with `npm run lint` — 8a4fd5b
+- [x] 2.4 Formatting check passes with `npm run format:check` — 8a4fd5b
 
 #### Manual
 
-- [x] 2.5 Full phone-sized check-in flow works from home through Done
-- [x] 2.6 Invalid input and unknown-code retry behavior works without duplicate submissions
-- [x] 2.7 Existing booking confirmation and direct Check in now behavior remains unchanged
+- [x] 2.5 Full phone-sized check-in flow works from home through Done — 8a4fd5b
+- [x] 2.6 Invalid input and unknown-code retry behavior works without duplicate submissions — 8a4fd5b
+- [x] 2.7 Existing booking confirmation and direct Check in now behavior remains unchanged — 8a4fd5b
 
 ### Phase 3: Documentation and Handoff
 
 #### Automated
 
-- [ ] 3.1 Progress section contains one parseable entry for every phase success criterion
-- [ ] 3.2 Change folder contains `change.md`, `research.md`, `plan.md`, and `plan-brief.md`
+- [x] 3.1 Progress section contains one parseable entry for every phase success criterion
+- [x] 3.2 Change folder contains `change.md`, `research.md`, `plan.md`, and `plan-brief.md`
 
 #### Manual
 
-- [ ] 3.3 Plan brief communicates scope, decisions, and verification commands without requiring the full plan
+- [x] 3.3 Plan brief communicates scope, decisions, and verification commands without requiring the full plan
