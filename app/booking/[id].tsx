@@ -107,7 +107,9 @@ export default function BookingScreen() {
       {checkInMutation.isSuccess && (
         <View accessibilityRole="alert" style={styles.checkInNotice}>
           <Text style={styles.checkInNoticeTitle}>
-            {checkInMutation.data.alreadyCheckedIn ? 'Already checked in' : 'Check-in complete'}
+            {checkInMutation.data.alreadyCheckedIn
+              ? 'Already checked in'
+              : 'Check-in complete'}
           </Text>
           <Text style={styles.checkInNoticeText}>
             {checkInMutation.data.alreadyCheckedIn

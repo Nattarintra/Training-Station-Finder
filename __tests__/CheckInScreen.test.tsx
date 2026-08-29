@@ -60,7 +60,9 @@ describe('CheckInScreen', () => {
     expect(getByLabelText('Booking code')).toBeOnTheScreen();
     expect(getByRole('button', { name: 'Check in' })).toBeOnTheScreen();
     expect(
-      getByText('This is a simulated check-in. No external certification or attendance service is contacted.'),
+      getByText(
+        'This is a simulated check-in. No external certification or attendance service is contacted.',
+      ),
     ).toBeOnTheScreen();
   });
 
@@ -115,7 +117,9 @@ describe('CheckInScreen', () => {
     const { getByRole, getByText } = render(<CheckInScreen />);
 
     expect(getByText('Couldn’t check in')).toBeOnTheScreen();
-    expect(getByText('Booking code not found. Check the code and try again.')).toBeOnTheScreen();
+    expect(
+      getByText('Booking code not found. Check the code and try again.'),
+    ).toBeOnTheScreen();
     expect(getByRole('button', { name: 'Check in' })).toBeEnabled();
   });
 
@@ -126,7 +130,9 @@ describe('CheckInScreen', () => {
     const { getByRole, getByText } = render(<CheckInScreen />);
 
     expect(getByRole('header', { name: 'Check-in complete' })).toBeOnTheScreen();
-    expect(getByText('Welcome, Alex Morgan. You’re ready for your session.')).toBeOnTheScreen();
+    expect(
+      getByText('Welcome, Alex Morgan. You’re ready for your session.'),
+    ).toBeOnTheScreen();
     expect(getByText('TSF-ABC123')).toBeOnTheScreen();
   });
 
@@ -140,7 +146,9 @@ describe('CheckInScreen', () => {
     const { getByRole, getByText } = render(<CheckInScreen />);
 
     expect(getByRole('header', { name: 'Already checked in' })).toBeOnTheScreen();
-    expect(getByText('This code has already been checked in. Welcome, Alex Morgan.')).toBeOnTheScreen();
+    expect(
+      getByText('This code has already been checked in. Welcome, Alex Morgan.'),
+    ).toBeOnTheScreen();
   });
 
   it('returns to the home route when Done is pressed', () => {

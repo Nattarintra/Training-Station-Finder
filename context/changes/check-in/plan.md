@@ -191,30 +191,30 @@ None. No persisted data, schema, dependency, or route migration is required.
 
 #### Automated
 
-- [x] 1.1 `npm test -- __tests__/CheckInScreen.test.tsx` passes with all route behavior cases
-- [x] 1.2 New test follows existing accessibility-oriented queries and avoids implementation-private styles
-- [x] 1.5 Repeat-aware API and booking-confirmation tests pass with `npm test -- __tests__/mockApi.test.ts __tests__/BookingScreen.test.tsx`
+- [x] 1.1 `npm test -- __tests__/CheckInScreen.test.tsx` passes with all route behavior cases — e7a970b
+- [x] 1.2 New test follows existing accessibility-oriented queries and avoids implementation-private styles — e7a970b
+- [x] 1.5 Repeat-aware API and booking-confirmation tests pass with `npm test -- __tests__/mockApi.test.ts __tests__/BookingScreen.test.tsx` — e7a970b
 
 #### Manual
 
-- [x] 1.3 Valid code produces the simulated success result from the home-screen Check in entry point
-- [x] 1.4 Unknown-code error remains understandable and retryable
-- [x] 1.6 Repeating a previously checked-in code shows the already-checked-in message and preserves the checked-in state
+- [x] 1.3 Valid code produces the simulated success result from the home-screen Check in entry point — e7a970b
+- [x] 1.4 Unknown-code error remains understandable and retryable — e7a970b
+- [x] 1.6 Repeating a previously checked-in code shows the already-checked-in message and preserves the checked-in state — e7a970b
 
 ### Phase 2: Regression Verification
 
 #### Automated
 
-- [ ] 2.1 Complete Jest suite passes with `npm test`
-- [ ] 2.2 Strict TypeScript passes with `npm run typecheck`
-- [ ] 2.3 ESLint passes with `npm run lint`
-- [ ] 2.4 Formatting check passes with `npm run format:check`
+- [x] 2.1 Complete Jest suite passes with `npm test`
+- [x] 2.2 Strict TypeScript passes with `npm run typecheck`
+- [x] 2.3 ESLint passes with `npm run lint`
+- [x] 2.4 Formatting check passes with `npm run format:check`
 
 #### Manual
 
-- [ ] 2.5 Full phone-sized check-in flow works from home through Done
-- [ ] 2.6 Invalid input and unknown-code retry behavior works without duplicate submissions
-- [ ] 2.7 Existing booking confirmation and direct Check in now behavior remains unchanged
+- [x] 2.5 Full phone-sized check-in flow works from home through Done
+- [x] 2.6 Invalid input and unknown-code retry behavior works without duplicate submissions
+- [x] 2.7 Existing booking confirmation and direct Check in now behavior remains unchanged
 
 ### Phase 3: Documentation and Handoff
 

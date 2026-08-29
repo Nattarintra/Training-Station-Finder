@@ -31,7 +31,9 @@ export default function CheckInScreen() {
           <Text style={styles.check}>✓</Text>
         </View>
         <Text accessibilityRole="header" style={styles.title}>
-          {checkInMutation.data.alreadyCheckedIn ? 'Already checked in' : 'Check-in complete'}
+          {checkInMutation.data.alreadyCheckedIn
+            ? 'Already checked in'
+            : 'Check-in complete'}
         </Text>
         <Text style={styles.copy}>
           {checkInMutation.data.alreadyCheckedIn

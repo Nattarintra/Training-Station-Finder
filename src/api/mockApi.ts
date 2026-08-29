@@ -1,5 +1,10 @@
 import { stations } from '@/src/api/fixtures';
-import { CheckInResult, CreateReservationInput, Reservation, Station } from '@/src/types/domain';
+import {
+  CheckInResult,
+  CreateReservationInput,
+  Reservation,
+  Station,
+} from '@/src/types/domain';
 
 export class ApiError extends Error {
   constructor(

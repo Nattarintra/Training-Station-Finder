@@ -17,14 +17,14 @@ The standalone `/check-in` route has behavior-level coverage for prefilled codes
 
 ## Key Decisions Made
 
-| Decision | Choice | Why | Source |
-| --- | --- | --- | --- |
-| Scope | Add route-level tests around the existing flow | The requested UI and API behavior already exist | Research |
-| Test boundary | Mock Expo Router and React Query public hooks | Matches existing `BookingScreen` and `ReserveScreen` tests | Research |
-| API/state model | Keep in-memory `Reservation.checkedInAt` and `checkIn` mutation | Preserves established simulated architecture | Research |
-| Repeat result | Return an `alreadyCheckedIn` result flag before updating state | Lets both UI entry points distinguish first and repeated requests without a second lookup | Plan |
-| Feature expansion | No QR scanning, persistence, authentication, or backend | Historical reservation decisions exclude these capabilities | Research |
-| Verification | Focused test plus full Jest, typecheck, lint, and format checks | Fits repository quality conventions | Plan |
+| Decision          | Choice                                                          | Why                                                                                       | Source   |
+| ----------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------- |
+| Scope             | Add route-level tests around the existing flow                  | The requested UI and API behavior already exist                                           | Research |
+| Test boundary     | Mock Expo Router and React Query public hooks                   | Matches existing `BookingScreen` and `ReserveScreen` tests                                | Research |
+| API/state model   | Keep in-memory `Reservation.checkedInAt` and `checkIn` mutation | Preserves established simulated architecture                                              | Research |
+| Repeat result     | Return an `alreadyCheckedIn` result flag before updating state  | Lets both UI entry points distinguish first and repeated requests without a second lookup | Plan     |
+| Feature expansion | No QR scanning, persistence, authentication, or backend         | Historical reservation decisions exclude these capabilities                               | Research |
+| Verification      | Focused test plus full Jest, typecheck, lint, and format checks | Fits repository quality conventions                                                       | Plan     |
 
 ## Scope
 
@@ -51,11 +51,11 @@ Expo Router hooks and React Query are mocked as existing screen tests do; assert
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. Manual route coverage | Repeat-aware result contract and dedicated `/check-in` tests | Keeping API flag and both result surfaces aligned |
-| 2. Regression verification | Full repository quality gate and phone-sized smoke checks | Existing dirty worktree may obscure unrelated failures |
-| 3. Documentation and handoff | Complete plan progress and review-ready artifacts | Progress drift if implementation skips canonical entries |
+| Phase                        | What it delivers                                             | Key risk                                                 |
+| ---------------------------- | ------------------------------------------------------------ | -------------------------------------------------------- |
+| 1. Manual route coverage     | Repeat-aware result contract and dedicated `/check-in` tests | Keeping API flag and both result surfaces aligned        |
+| 2. Regression verification   | Full repository quality gate and phone-sized smoke checks    | Existing dirty worktree may obscure unrelated failures   |
+| 3. Documentation and handoff | Complete plan progress and review-ready artifacts            | Progress drift if implementation skips canonical entries |
 
 **Prerequisites:** Existing `check-in` research and current Expo SDK 54 project setup.  
 **Estimated effort:** ~1 focused implementation session across 3 small phases.
